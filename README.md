@@ -1,11 +1,10 @@
 # SER - Speech and Emotion Recognition
 
-基于大语言模型的语音和文本情感识别工具包。
+基于大语言模型的文本情感识别工具包。
 
 ## 功能特性
 
 - 🎯 **文本情感识别**：根据用户输入的文本识别情感状态
-- 🎤 **语音情感识别**：支持音频输入的情感识别
 - 💬 **多轮对话**：支持上下文对话，自动维护对话历史
 - 🏷️ **情感标签**：输出标准化的情感标签（normal, happy, tired, confident, afraid, shy）
 
@@ -53,7 +52,7 @@ recognizer = TextEmotionRecognizer(api_key="your_api_key")
 
 ### TextEmotionRecognizer
 
-文本和语音情感识别器。
+文本情感识别器。
 
 #### 初始化参数
 
@@ -90,17 +89,6 @@ recognizer = TextEmotionRecognizer(api_key="your_api_key")
 - `4`: afraid (害怕)
 - `5`: shy (害羞)
 
-##### recognize_audio(audio_url, text=None, audio_format="wav", stream=False)
-
-识别音频情感。
-
-**参数：**
-- `audio_url` (str): 音频文件的URL或base64编码的音频数据
-- `text` (str, optional): 可选的文本提示
-- `audio_format` (str): 音频格式，默认 `"wav"`
-- `stream` (bool): 是否使用流式输出，默认 `False`
-
-**返回：** 同 `recognize_text()`
 
 ##### reset_history()
 
