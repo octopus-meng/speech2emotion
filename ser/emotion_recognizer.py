@@ -1,7 +1,18 @@
 import re
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Tuple
 
 from ser.llm_client import LLMClient
+
+# 情绪编号到名称的映射
+EMOTION_MAP = {
+    0: "normal",
+    1: "happy",
+    2: "tired",
+    3: "confident",
+    4: "afraid",
+    5: "shy",
+}
+from ser.src.prompts import EMOTION_PROMPT_CN
 
 
 
@@ -15,6 +26,7 @@ class TextEmotionRecognizer:
         modalities: List[str] = ["text"],
         audio_config: Optional[Dict] = None,
         max_history: Optional[int] = 4,
+        prompt: Optional[str] = EMOTION_PROMPT_CN,
     ):
         """
         初始化文本情感识别器
@@ -34,6 +46,7 @@ class TextEmotionRecognizer:
             modalities=modalities,
             audio_config=audio_config,
             max_history=max_history,
+            system_message=prompt,
         )
     
     def recognize(
@@ -52,7 +65,7 @@ class TextEmotionRecognizer:
         
         Returns:
             包含以下字段的字典：
-            - emotion: 情绪标签编号 (0-5)，如果未找到标签则默认为0
+            - emotion: 情绪标签元组 (编号, 名称)，格式如 (1, "happy")，如果未找到标签则为 (0, "normal")
             - response: 模型的回复内容（不包含情绪标签）
         """
         content = []
@@ -87,14 +100,16 @@ class TextEmotionRecognizer:
         match = re.search(emotion_pattern, raw_response)
         
         if match:
-            emotion = int(match.group(1))
-            if emotion >= 6 or emotion < 0: 
-                print(f"error emotion id {emotion}, set to 0")
-                emotion = 0 
+            emotion_id = int(match.group(1))
+            if emotion_id >= 6 or emotion_id < 0: 
+                print(f"error emotion id {emotion_id}, set to 0")
+                emotion_id = 0
+            emotion_name = EMOTION_MAP.get(emotion_id, "normal")
+            emotion = (emotion_id, emotion_name)
             response = re.sub(emotion_pattern, '', raw_response).strip()
         else:
             response = raw_response.strip()
-            emotion = 0
+            emotion = (0, "normal")
         
         return {
             "emotion": emotion,

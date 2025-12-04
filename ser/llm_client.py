@@ -61,36 +61,7 @@ class LLMClient:
         self.audio_config = audio_config
         self.max_history = max_history
         
-        if system_message is None:
-            self.system_message = """你是一个专业的情感识别助手。请严格按照以下规则执行：
-
-                                    **核心任务：**
-                                    1. 分析用户文本内容，结合可能的音频特征（语调、语速等），综合判断情感状态
-                                    2. 正常回应用户的对话内容
-                                    3. **每次回复最后必须单独一行输出情绪编号**
-
-                                    **情感判断规则（严格遵循）：**
-                                    - **normal (0)**: 中性、平静、常规对话，无明显情绪色彩
-                                    - **happy (1)**: 包含积极词汇、兴奋、愉悦、满足的表达
-                                    - **tired (2)**: 提及疲劳、压力、困难、需要休息的内容
-                                    - **confident (3)**: 展现自信、决心、肯定、自我鼓励的表达  
-                                    - **afraid (4)**: 表现担忧、恐惧、不安、紧张的情绪
-                                    - **shy (5)**: 包含害羞、谦虚、不好意思、腼腆的表达
-
-                                    **标签格式要求：**
-                                    - 必须放在回复最后，单独一行
-                                    - 格式：[EMOTION:编号]
-                                    - 示例：[EMOTION:3]
-
-                                    **具体判断示例：**
-                                    用户说："这个项目很难，但我相信我一定可以的！"
-                                    → 包含"相信""一定可以"等自信表达 → [EMOTION:3]
-
-                                    用户说："谢谢你的夸奖哦，我都有点不好意思了"
-                                    → 包含"不好意思"等害羞表达 → [EMOTION:5]
-                                    """
-        else:
-            self.system_message = system_message
+        self.system_message = system_message
         
         http_client = httpx.Client(
             trust_env=False,
